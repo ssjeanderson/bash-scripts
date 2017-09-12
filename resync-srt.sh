@@ -11,18 +11,18 @@ while read -r line
 do
     if [[ "$line" =~ ^[0-9][0-9]\: ]]; then
         start_hour=${line:0:2}
-        stop_hour=${line:17:2}
         start_min=${line:3:2}
-        stop_min=${line:20:2}
         start_sec=${line:6:2}
+        stop_hour=${line:17:2}
+        stop_min=${line:20:2}     
         stop_sec=${line:23:2}
 
-        start_milisec=${line:9:3}
-        stop_milisec=${line:26:3}
+        start_millisec=${line:9:3}
+        stop_millisec=${line:26:3}
 
         new_start_hour=$start_hour
-        new_stop_hour=$stop_hour
         new_start_min=$start_min
+        new_stop_hour=$stop_hour
         new_stop_min=$stop_min
 
         new_start_sec=$(( $start_sec $operation $adjust_sec ))
@@ -73,7 +73,7 @@ do
             fi
         fi
 
-        echo "$new_start_hour:$new_start_min:$new_start_sec,$start_milisec --> $new_stop_hour:$new_stop_min:$new_stop_sec,$stop_milisec" >> $newfile
+        echo "$new_start_hour:$new_start_min:$new_start_sec,$start_millisec --> $new_stop_hour:$new_stop_min:$new_stop_sec,$stop_millisec" >> $newfile
     else
         echo "$line" >> $newfile
     fi
