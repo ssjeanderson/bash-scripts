@@ -1,0 +1,13 @@
+ldapmodify -v -h ad.teste.com -D "admin@teste.com" -W -x -f modify.ldif
+
+# Exmplo de ldif para alterar valor de atributo
+
+dn: CN=SETOR1,OU=SETORES,OU=EMPRESA,DC=teste,DC=com
+changetype: modify
+replace: sAMAccountName
+sAMAccountName: SETOR1
+
+dn: CN=SETOR2,OU=SETORES,OU=EMPRESA,DC=teste,DC=com
+changetype: modify
+replace: sAMAccountName
+sAMAccountName: SETOR2
