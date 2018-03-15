@@ -2,16 +2,21 @@
 
 # Util para debug em bash script
 
-trap 'echo -e "
-# Erro encontrado durante execução do Script #
+trap 'error_track $LINENO $? "$BASH_COMMAND"' ERR
 
-Numero da linha no script: $LINENO
-Exit code do commando: $?
-Comando no script: $BASH_COMMAND
-Comando expandido: $(eval echo $BASH_COMMAND)"' ERR
+error_track() {
+        echo
+        echo "## Erro encontrado durante execução do Script ##"
+        echo
+        echo "Numero da linha no script: $1"
+        echo "Exit code do comando:  $2"
+        echo "Comando no script: $3"
+        echo "Comando expandido: $(eval echo $3)"
+}
 
 # Inicio do programa
 
 # comando qualquer para gerar um erro
-AAA="aaa"
-ls "$AAA"
+VAR="valor"
+ls "$VAR"
+
