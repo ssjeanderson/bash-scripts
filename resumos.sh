@@ -12,3 +12,7 @@ done
 ####
 # Comenta todas as linhas de um arquivo
 sed -i.old -e 's/^/#/' arquivo
+
+
+# executar como expect do PAC. seta o color do vim
+alias vim='vim -c "color desert"'; history -d $((HISTCMD-1))
