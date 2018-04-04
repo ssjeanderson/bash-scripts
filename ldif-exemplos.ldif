@@ -11,3 +11,10 @@ dn: CN=SETOR2,OU=SETORES,OU=EMPRESA,DC=teste,DC=com
 changetype: modify
 replace: sAMAccountName
 sAMAccountName: SETOR2
+
+
+# alterar o distinguishedName
+dn: CN=WIN7-NET-01,OU=Estacoes,DC=teste,DC=net
+changetype: modrdn
+newrdn: CN=WIN7-NET-06
+deleteoldrdn: 1
