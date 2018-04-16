@@ -12,23 +12,28 @@ ARRAY[6]="dn: CN=computador,DC=teste,DC=com"
 ARRAY[7]="sam: nome3\$"
 ARRAY[8]=""
 
-I_FINAL="$(( ${#ARRAY[@]} - 1 ))"
+# Calcula o tamanho do array, desconsiderando as ultimas 8 linhas (informação nao util)
+TAMANHO_UTIL=$((${#RESPOSTA_LDAP[@]} - 8))
 
-for i in $(seq 0 3 $I_FINAL); do
+# Percorre o Array, incrementado em 4
+for i in $(seq 0 3 $TAMANHO_UTIL); do
 
-        if [[ "${ARRAY[$i]}" =~ ^dn:: ]]; then
-                DN="$(echo ${ARRAY[$i]#* } | base64 -d)"
-                CN="${DN//*(*CN=|,*)}"
+        if [[ "${RESPOSTA_LDAP[$i]}" =~ ^dn:: ]]; then
+                DN="$(echo ${RESPOSTA_LDAP[$i]#* } | base64 -d)"
+                CN="${DN//*(CN=|,*)}"
         else
-                DN="${ARRAY[$i]}"
-                CN="${DN//*(*CN=|,*)}"
+                DN="${RESPOSTA_LDAP[$i]#* }"
+                CN="${DN//*(CN=|,*)}"
         fi
 
-
-        if [ ! "$CN" == "${ARRAY[$i+1]//*(sam: |$)}" ]; then
-                LDIF+="alterar DN: $DN\nnovo RDN: CN=${ARRAY[$i+1]//*(sam: |$)}\n\n"
+        if [ "$CN" != "${RESPOSTA_LDAP[$i+1]//*(sAMAccountName: |\$)}" ]; then
+                LDIF+="dn: $DN\nchangetype: modrdn\nnewrdn: CN=${RESPOSTA_LDAP[$i+1]//*(sAMAccountName: |$)}\ndeleteoldrdn: 1\n\n"
         fi
 done
 
-echo -ne "$LDIF"
-                                                                                        33,9          Fi
+if [[ ! "$LDIF" ]]; then
+        echo "Nothing to change."
+        exit 0
+fi
+
+echo -en "$LDIF"
