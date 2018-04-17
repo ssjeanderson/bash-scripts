@@ -2,8 +2,6 @@
 
 # Util para debug em bash script
 
-trap 'error_track $LINENO $? "$BASH_COMMAND"' ERR
-
 error_track() {
         echo
         echo "## Erro encontrado durante execução do Script ##"
@@ -13,6 +11,8 @@ error_track() {
         echo "Comando no script: $3"
         echo "Comando expandido: $(eval echo $3)"
 }
+
+trap 'error_track $LINENO $? "$BASH_COMMAND"' ERR
 
 # Inicio do programa
 
