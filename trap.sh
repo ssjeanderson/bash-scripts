@@ -1,4 +1,6 @@
 #!/bin/bash
+# regex to filter vars
+egrep -o '\$([a-zA-Z_][a-zA-Z0-9_]*|[0-9\!\@\#\$\*\-\_\?]|\{.*})'
 
 # Util para debug em bash script
 
