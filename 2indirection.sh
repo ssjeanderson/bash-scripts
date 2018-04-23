@@ -4,42 +4,35 @@ var1=one
 var2=two
 var3=three
 
-var4='aaaa$var1\n texto $va-r2 ${var3} $(some_command) $_var2 $0A $#$'
+var4='$var1 texto $va-r2 ${var3} $(some_command) $_var2 $0A $#$'
 
-var5="$(echo "$var4" | sed 's/\\n/\\\\n/g')"
+var5="$(echo "$var4" | sed 's/\n/\\n/g')"
 
-var6="$(echo "$var5" | egrep -o '\$([a-zA-Z_][a-zA-Z0-9_]*|[0-9\!\@\#\$\*\-\_\?])' | tr -d '$')"
-var7="$(echo "$var5" | sed -E 's/\$([a-zA-Z_][a-zA-Z0-9_]*|[0-9\!\@\#\$\*\-\_\?])/\\n/g')"
-var7="$(echo -e "$var7")"
+variables="$(echo "$var5" | egrep -o '\$([a-zA-Z_][a-zA-Z0-9_]*|[0-9\!\@\#\$\*\-\_\?])' | tr -d '$')"
+not_variables="$(echo "$var5" | sed -E 's/\$([a-zA-Z_][a-zA-Z0-9_]*|[0-9\!\@\#\$\*\-\_\?])/\n/g')"
 
-mapfile -t var6x <<< "$var6"
-mapfile -t var7x <<< "$var7"
+readarray -t array_variables <<< "$variables"
+readarray -t array_not_variables <<< "$not_variables"
 
-for i in ${!var6x[@]}; do
-	echo "var6x[$i]=${var6x[$i]}"
+for i in ${!array_variables[@]}; do
+	echo "array_variables[$i]=${array_variables[$i]}"
 done
 
 echo --------------------
 
-for i in ${!var7x[@]}; do
-	echo "var6x[$i]=${var7x[$i]}"
+for i in ${!array_not_variables[@]}; do
+	echo "array_not_variables[$i]=${array_not_variables[$i]}"
 done
 
-echo -------------------
+#echo -------------------
 
-for i in ${!var7x[@]}; do
-	echo Loop $i:
-	notvar="${var7x[$i]}"
-	var="${var6x[$i]}"
+for i in ${!array_not_variables[@]}; do
+	#echo Loop $i:
+	notvar="${array_not_variables[$i]}"
+	var="${array_variables[$i]:-NONE}"
 	result+="$notvar"
 	result+="${!var}"
-	#result+="${var7x[$i]}"
-	#result+="${var6x[$i]}"
 done
-
-#echo "${var6x[@]}"
-#echo --
-#echo "${var7x[@]}"
 
 echo ------
 
