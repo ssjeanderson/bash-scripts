@@ -8,7 +8,7 @@ var4='$var1 texto $va-r2 ${var3} $(some_command) $_var2 $0A $#$'
 
 var5="$(echo "$var4" | sed 's/\n/\\n/g')"
 
-variables="$(echo "$var5" | egrep -o '\$([a-zA-Z_][a-zA-Z0-9_]*|[0-9\!\@\#\$\*\-\_\?])' | tr -d '$')"
+variables="$(echo "$var5" | egrep -o '\$([a-zA-Z_][a-zA-Z0-9_]*|[0-9\!\@\#\$\*\-\_\?])' | cut -b 2-)"
 not_variables="$(echo "$var5" | sed -E 's/\$([a-zA-Z_][a-zA-Z0-9_]*|[0-9\!\@\#\$\*\-\_\?])/\n/g')"
 
 readarray -t array_variables <<< "$variables"
